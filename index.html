@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Self Service</title>
+  </head>
+  <body>
+    <main id="app">
+      <div class="page">
+        <section class="page_container">
+          <h4>Select Your Itens</h4>
+          <div class="self_service_container">
+            <div v-for="product in products">
+              <div
+                class="product_container"
+                @click="product.active = !product.active"
+                :class="{ selected: product.active }"
+              >
+                <img :src="product.photo" class="img_itens" />
+                <p>{{product.name}}</p>
+                <p>{{product.price}}</p>
+                <div class="quantity_container" v-if="product.active">
+                  <button
+                    class="button"
+                    @click.stop="product.quantity-=1"
+                    :disabled="product.quantity <= 1"
+                  >
+                    -
+                  </button>
+                  <p>{{product.quantity}}</p>
+                  <button class="button" @click.stop="product.quantity+=1">
+                    +
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div v-if="totalItens()>0" class="sumary">
+          <strong class="title_sumary">Order Details</strong>
+          <table>
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr v-for="product in products">
+                <template v-if="product.active">
+                  <td>{{product.quantity + " x " + product.name}}</td>
+                  <td>{{(product.quantity * product.price).toFixed(2)}}</td>
+                </template>
+              </tr>
+
+              <tr>
+                <th>Total</th>
+                <th>{{totalItens()}}</th>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
